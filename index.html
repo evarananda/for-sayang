@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message for Sayang!</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #ffe6e6;
+            color: #ff6666;
+        }
+        h1 {
+            font-size: 2.5rem;
+        }
+        #message {
+            font-size: 2rem;
+            letter-spacing: 0.1rem;
+        }
+        .heart {
+            color: red;
+            font-size: 2rem;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        input {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Guess the Love Message</h1>
+    <p id="message">_ _ _ _ _ _ _ _</p>
+    <input type="text" id="guess" maxlength="1" placeholder="Guess a letter">
+    <button onclick="restartGame()">Restart</button>
+    <div id="hearts"></div>
+
+    <script>
+        const loveMessage = "you are so precious to me".toUpperCase();
+        let maskedMessage = "----------------------";
+        let guessedLetters = [];
+
+        const messageDisplay = document.getElementById("message");
+        const guessInput = document.getElementById("guess");
+        const heartsContainer = document.getElementById("hearts");
+
+        messageDisplay.textContent = maskedMessage;
+
+        guessInput.addEventListener("input", function () {
+            const guess = guessInput.value.toUpperCase();
+            guessInput.value = "";  // Clear the input after each guess
+
+            if (guess && !guessedLetters.includes(guess)) {
+                guessedLetters.push(guess);
+                updateMaskedMessage(guess);
+            }
+        });
+
+        function updateMaskedMessage(guess) {
+            let updatedMessage = "";
+
+            for (let i = 0; i < loveMessage.length; i++) {
+                if (loveMessage[i] === guess || guessedLetters.includes(loveMessage[i])) {
+                    updatedMessage += loveMessage[i] + " ";
+                } else if (loveMessage[i] === " ") {
+                    updatedMessage += "  ";  // Keep spaces
+                } else {
+                    updatedMessage += "_ ";  // Mask for unguessed letters
+                }
+            }
+
+            maskedMessage = updatedMessage.trim();
+            messageDisplay.textContent = maskedMessage;
+
+            if (loveMessage.includes(guess)) {
+                showHeart();
+            }
+
+            if (maskedMessage.replace(/\s+/g, '') === loveMessage.replace(/\s+/g, '')) {
+                messageDisplay.textContent = "Yes, you got it right! You are so precious to me, I love you sayang! Have an amazing day! Mwah 😘";
+            }
+        }
+
+        function showHeart() {
+            const heart = document.createElement("span");
+            heart.classList.add("heart");
+            heart.textContent = "❤️";
+            heartsContainer.appendChild(heart);
+        }
+
+        function restartGame() {
+            guessedLetters = [];
+            maskedMessage = "_ _ _ _ _ _ _ _";
+            messageDisplay.textContent = maskedMessage;
+            heartsContainer.innerHTML = "";
+        }
+    </script>
+
+</body>
+</html>
